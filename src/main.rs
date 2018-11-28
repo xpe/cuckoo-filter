@@ -1,6 +1,8 @@
-use cuckoo_filter::{Config, Filter};
-use rand::{thread_rng, Rng};
 use rand::distributions::{Alphanumeric};
+use rand::seq::SliceRandom;
+use rand::{thread_rng, Rng};
+
+use cuckoo_filter::{Config, Filter};
 
 pub fn main() {
     println!("Cuckoo Filter");
@@ -20,7 +22,9 @@ fn run_experiment<R>(rng: &mut R) where R: Rng {
         Ok(f) => {
             let n = 990000;
             let mut words = words(rng, n);
-            rng.shuffle(&mut words);
+            // rng.shuffle(&mut words);
+            words.shuffle(rng);
+
             let mut summary = Summary::new(config.max_swaps as usize + 1);
             for (i, word) in words.iter().enumerate() {
                 let (status, swaps) = insert(&f, word);

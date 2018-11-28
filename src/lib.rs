@@ -1,6 +1,8 @@
 #![feature(refcell_replace_swap)]
 
-use rand::{Rng, thread_rng, ThreadRng};
+use rand::rngs::ThreadRng;
+use rand::seq::SliceRandom;
+use rand::{Rng, thread_rng};
 use std::cell::RefCell;
 use std::collections::hash_map::DefaultHasher;
 use std::fmt::Debug;
@@ -126,7 +128,7 @@ impl Filter {
 
         // Must relocate existing items
         let mut rng = self.rng.borrow_mut();
-        let mut idx = *rng.choose(&[idx_1, idx_2]).unwrap();
+        let mut idx = *([idx_1, idx_2].choose(&mut *rng).unwrap());
         let mut finger = finger;
         for swaps in 1 ..= self.max_swaps {
             let entry = rng.gen_range(0, self.num_entries);
@@ -153,7 +155,7 @@ impl Filter {
 
         // Must relocate existing items
         let mut rng = self.rng.borrow_mut();
-        let mut idx = *rng.choose(&[idx_1, idx_2]).unwrap();
+        let mut idx = *([idx_1, idx_2].choose(&mut *rng).unwrap());
         let mut finger = finger;
         for swaps in 1 ..= self.max_swaps {
             let entry = rng.gen_range(0, self.num_entries);
